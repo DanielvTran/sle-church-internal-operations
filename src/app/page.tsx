@@ -1,53 +1,44 @@
+/**
+ * @file Home.tsx
+ * @description Home page component that handles user authentication using NextAuth.
+ * Displays a greeting message and login/logout options based on the user's session state.
+ */
+
 "use client";
 
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { signIn, signOut, useSession } from "next-auth/react";
 
+/**
+ * Home Component
+ *
+ * @component
+ *
+ * @example
+ * ```tsx
+ * <Home />
+ * ```
+ */
 export default function Home() {
-  type Event = {
-    id: number;
-    title: string;
-  };
+  // Retrieve the user's session data
+  const { data: session } = useSession();
 
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch("/api/data/event/get-event");
-        const data = await response.json();
-        setEvents(data);
-      } catch (error) {
-        console.error("Error fetching events:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvents();
-  }, []);
-
-  if (loading) return <p>Loading events...</p>;
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8  items-center">
-        <h1 className="text-center font-bold text-3xl">What&apos;s On</h1>
-        <Carousel>
-          <CarouselContent>
-            {events.map((event) => (
-              <CarouselItem key={event.id} className="basis-1/3">
-                <div className="p-4 border rounded-lg shadow-md">
-                  <h3 className="text-lg font-semibold">{event.title}</h3>
-                  <p>more</p>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-      </main>
+      <main className="flex flex-col gap-8 items-center">Hello</main>
+
+      {/* Show different content based on session state */}
+      {session ? (
+        <>
+          <h2>Welcome Back: {session.user?.name}</h2>
+          <Button onClick={() => signOut()}>Sign Out</Button>
+        </>
+      ) : (
+        <>
+          <h2>You are not logged in</h2>
+          <Button onClick={() => signIn("google", { callbackUrl: `/dashboard` })}>Sign in with Google</Button>
+        </>
+      )}
     </div>
   );
 }
