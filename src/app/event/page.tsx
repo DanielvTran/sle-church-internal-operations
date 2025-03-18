@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,12 +24,16 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { eventDefaultValues } from "@/lib/config";
 import { eventSchema } from "@/lib/validationSchema";
+import axios from "axios";
 
 // Helper functions
 import { generateTimeOptions } from "@/lib/utils";
 
 // Index
 import { tagOptions } from "../../../lib";
+
+// Types
+import type { Event } from "../../../lib/types";
 
 /**
  * Events Page Component
@@ -71,8 +76,20 @@ export default function Event(): React.ReactElement {
     defaultValues: eventDefaultValues,
   });
 
-  const onSubmit = (data: any) => {
-    console.log("Event created:", data);
+  // Handle form submission
+  const onSubmit = async (data: Event) => {
+    try {
+      const response = await axios.post("/api/data/event/create-event", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      toast.success("Event has been created");
+      console.log("Event created successfully:", response.data);
+    } catch (error) {
+      console.error("Error creating event:", error);
+    }
   };
 
   return (
