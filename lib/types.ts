@@ -5,5 +5,5 @@ export interface Event {
   endTime: string;
   description: string;
   location: string;
-  tag: string[];
+  tags: string[];
 }

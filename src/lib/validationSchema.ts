@@ -21,5 +21,5 @@ export const eventSchema = z.object({
   }),
   description: z.string(),
   location: z.string(),
-  tag: z.array(z.string()),
+  tags: z.array(z.string()),
 });

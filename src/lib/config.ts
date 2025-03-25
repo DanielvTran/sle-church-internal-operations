@@ -5,5 +5,5 @@ export const eventDefaultValues = {
   endTime: "" as string,
   description: "" as string,
   location: "" as string,
-  tag: [] as string[],
+  tags: [] as string[],
 };

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../../../lib/prismaClient";
-import type { Event } from "../../../../../../lib/types";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
@@ -8,10 +7,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const data: Event = await req.json();
 
     // Destructure the data
-    const { eventName, eventDate, startTime, endTime, description, location, tag } = data;
+    const { eventName, eventDate, startTime, endTime, description, location, tags } = data;
 
     // Check if all the required fields are provided
-    if (!eventName || !eventDate || !startTime || !endTime || !description || !location || !tag) {
+    if (!eventName || !eventDate || !startTime || !endTime || !description || !location || !tags) {
       return NextResponse.json({ error: "Please provide all the required fields" }, { status: 400 });
     }
 
@@ -35,7 +34,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         endTime,
         description,
         location,
-        tags: JSON.stringify(tag),
+        tags: JSON.stringify(tags),
       },
     });
 
