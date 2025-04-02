@@ -9,21 +9,13 @@ datasource db {
 
 model Event {
   id          Int      @id @default(autoincrement())
-  eventName   String
-  eventDate   DateTime
-  startTime   String
-  endTime     String
-  description String
-  location    String
-  tags        Json
   createdAt   DateTime @default(now())
+  description String
+  endTime     String
+  eventDate   DateTime
+  eventName   String
+  location    String
+  startTime   String
+  tags        Json
   updatedAt   DateTime @updatedAt
-}
-
-model User {
-  id        String   @id
-  userName  String   @unique
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
 }
