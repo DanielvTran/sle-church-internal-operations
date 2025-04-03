@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../../../lib/prismaClient";
+import { Event } from "@prisma/client";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
@@ -35,6 +36,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         description,
         location,
         tags: JSON.stringify(tags),
+        updatedAt: new Date(),
       },
     });
 

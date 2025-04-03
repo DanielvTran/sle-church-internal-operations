@@ -12,10 +12,10 @@ model Event {
   createdAt   DateTime @default(now())
   description String
   endTime     String
-  eventDate   DateTime
-  eventName   String
   location    String
   startTime   String
+  updatedAt   DateTime
+  eventDate   DateTime
+  eventName   String
   tags        Json
-  updatedAt   DateTime @updatedAt
 }

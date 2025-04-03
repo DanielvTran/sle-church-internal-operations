@@ -201,7 +201,7 @@ export default function Event(): React.ReactElement {
                           <Calendar
                             mode="single"
                             selected={field.value ? new Date(field.value) : undefined}
-                            onSelect={(selectedDate: Date) => field.onChange(selectedDate)}
+                            onSelect={(selectedDate: Date | undefined) => field.onChange(selectedDate)}
                             initialFocus
                             disabled={(date: Date) => date < new Date()}
                           />
