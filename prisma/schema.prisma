@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "./src/generated/prisma-client"
 }
 
 datasource db {
@@ -10,12 +11,33 @@ datasource db {
 model Event {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
-  description String
-  endTime     String
-  location    String
-  startTime   String
-  updatedAt   DateTime
-  eventDate   DateTime
+  updatedAt   DateTime @updatedAt
   eventName   String
-  tags        Json
+  eventDate   DateTime
+  startTime   String
+  endTime     String
+  description String
+  location    String
+
+  // Relation to EventTag
+  eventTags EventTag[]
+}
+
+model Tag {
+  id    Int    @id @default(autoincrement())
+  value String @unique
+  name  String @unique
+
+  // Relation to EventTag
+  eventTags EventTag[]
+}
+
+model EventTag {
+  eventId Int
+  tagId   Int
+
+  event Event @relation(fields: [eventId], references: [id])
+  tag   Tag   @relation(fields: [tagId], references: [id])
+
+  @@id([eventId, tagId]) //  Primary key
 }

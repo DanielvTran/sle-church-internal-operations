@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../../../lib/prismaClient";
-import { Event } from "@prisma/client";
+import { EventFormType } from "../../../../../../lib/types";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
     // Parse the JSON request body
-    const data: Event = await req.json();
+    const data: EventFormType = await req.json();
 
     // Destructure the data
     const { eventName, eventDate, startTime, endTime, description, location, tags } = data;
@@ -26,7 +26,25 @@ export async function POST(req: NextRequest, res: NextResponse) {
       return NextResponse.json({ error: "Event already exists" }, { status: 400 });
     }
 
-    // Create event
+    // Create or find tags based on tag values
+    const tagRecords = await Promise.all(
+      tags.map(async (tag: string) => {
+        let tagRecord = await prisma.tag.findUnique({
+          where: { name: tag }, // Match by tag name
+        });
+
+        // If tag doesn't exist, create it
+        if (!tagRecord) {
+          tagRecord = await prisma.tag.create({
+            data: { value: tag.toLowerCase().replace(/\s+/g, ""), name: tag },
+          });
+        }
+
+        return tagRecord;
+      })
+    );
+
+    // Create the event with the associated tags
     const newEvent = await prisma.event.create({
       data: {
         eventName,
@@ -35,8 +53,15 @@ export async function POST(req: NextRequest, res: NextResponse) {
         endTime,
         description,
         location,
-        tags: JSON.stringify(tags),
+        eventTags: {
+          create: tagRecords.map((tag) => ({
+            tagId: tag.id,
+          })),
+        },
         updatedAt: new Date(),
+      },
+      include: {
+        eventTags: true,
       },
     });
 

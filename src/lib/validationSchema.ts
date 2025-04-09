@@ -23,5 +23,3 @@ export const eventSchema = z.object({
   location: z.string(),
   tags: z.array(z.string()),
 });
-
-export type EventFormType = z.infer<typeof eventSchema>;

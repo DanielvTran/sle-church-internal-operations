@@ -1,3 +1,6 @@
+import { z } from "zod";
+import { eventSchema } from "@/lib/validationSchema";
+
 export interface Event {
   eventName: string;
   eventDate: Date;
@@ -7,3 +10,5 @@ export interface Event {
   location: string;
   tags: string[];
 }
+
+export type EventFormType = z.infer<typeof eventSchema>;
